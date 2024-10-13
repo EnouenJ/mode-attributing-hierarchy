@@ -1,4 +1,4 @@
-# Mode-Attributing Hierarchy for Generation of Tabular Data
+# Mode-Attributing Hierarchy for Generating Tabular Data
 
 This is the code for training the higher-order energy based models based on Mahgenta
 
