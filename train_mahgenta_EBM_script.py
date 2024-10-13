@@ -49,7 +49,7 @@ from torch.utils.data import TensorDataset, DataLoader
 
 
 import sys
-from pytorch_lowBodyLegendre_models import LowBodyLegendre_LogLinearGAM
+from models import LowBodyLegendre_LogLinearGAM
 
 
 from utils.utils import *
