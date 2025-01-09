@@ -17,7 +17,7 @@ def powerset(iterable):
 
 
 class LowBodyLegendre_LogLinearGAM(nn.Module):
-    def __init__(self, my_inters, I_ks, constant_version=None, X_or_P_mode="X", verbose=False):
+    def __init__(self, my_inters, I_ks, constant_version=None, X_or_P_mode="X"):
         super().__init__()
 
 
@@ -38,7 +38,6 @@ class LowBodyLegendre_LogLinearGAM(nn.Module):
             self.div_I_ks.append(cumprod)
             cumprod *= I_i
         self.div_I_ks.append(cumprod) #still add full product to the end
-        self.verbose = verbose
 
 
 
@@ -110,7 +109,6 @@ class LowBodyLegendre_LogLinearGAM(nn.Module):
             self.const_parameters[str(tup)] = 1
         else:
             print("NOT IMPMLEMENTED YET")
-            raise NotImplementedError("other constatnts not implemented for gradual addition")
 
         #ADD THE THETA MASKS
         if recompute_masks:
@@ -1507,7 +1505,7 @@ class LowBodyLegendre_LogLinearGAM(nn.Module):
     def full_trusted_forward(self):
         curr_device = self.theta_parameters["()"].device
         new_logits = torch.zeros(*self.I_ks).to(curr_device)
-        verbose=self.verbose
+        verbose=False
 
         for tt,tup in enumerate(self.my_inters):
             theta_tt = self.theta_parameters[str(tup)]*self.const_parameters[str(tup)]
@@ -1613,7 +1611,8 @@ class LowBodyLegendre_LogLinearGAM(nn.Module):
             if len(tup)>maxlen:
                 maxlen=len(tup)
 
-        verbose=self.verbose
+        verbose=True
+        verbose=False
         for currlen in range(maxlen,0,-1):
             if verbose:
                 print()
@@ -1761,7 +1760,8 @@ class LowBodyLegendre_LogLinearGAM(nn.Module):
             if len(tup)>maxlen:
                 maxlen=len(tup)
 
-        verbose=self.verbose
+        verbose=True
+        verbose=False
         for currlen in range(maxlen,0,-1):
             if verbose:
                 print()
@@ -1865,7 +1865,8 @@ class LowBodyLegendre_LogLinearGAM(nn.Module):
         curr_device = self.theta_parameters["()"].device
             
 
-        verbose=self.verbose
+        verbose=True
+        verbose=False
         for currlen in range(maxlen,0,-1):
             if verbose:
                 print()
@@ -1926,7 +1927,8 @@ class LowBodyLegendre_LogLinearGAM(nn.Module):
                 maxlen=len(tup)
             
 
-        verbose=self.verbose
+        verbose=True
+        verbose=False
         for currlen in range(maxlen,0,-1):
             if verbose:
                 print()

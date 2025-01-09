@@ -5,30 +5,6 @@
 
 
 
-
-import os
-import time
-import copy
-import json
-import numpy as np
-import torch
-from torch import Tensor
-from torch.utils.data import TensorDataset, DataLoader
-
-
-import sys
-from models import LowBodyLegendre_LogLinearGAM
-
-
-from utils.utils import *
-from datasets.dataset_utils import load_dataset
-from utils.MIS_utils import complete_MIS_search
-    
-    
-
-
-
-
 from absl import app
 from absl import flags
 
@@ -62,6 +38,28 @@ flags.DEFINE_integer("many_body_index", 1, "one/two/three -body.")
 
 
 
+import os
+import time
+import copy
+import json
+import numpy as np
+import torch
+from torch import Tensor
+from torch.utils.data import TensorDataset, DataLoader
+
+
+import sys
+from models import LowBodyLegendre_LogLinearGAM
+
+
+from utils.utils import *
+from datasets.dataset_utils import load_dataset
+from utils.MIS_utils import complete_MIS_search
+    
+
+
+
+
 
 
 
@@ -70,12 +68,9 @@ flags.DEFINE_integer("many_body_index", 1, "one/two/three -body.")
 def main(argv):
     del argv
 
-    VERBOSE_SETUP = True
-
-    if VERBOSE_SETUP:
-        print(FLAGS)
-        for thing in FLAGS:
-            print(thing,FLAGS.flag_values_dict()[thing])
+    print(FLAGS)
+    for thing in FLAGS:
+        print(thing,FLAGS.flag_values_dict()[thing])
     
     
     MIS_search_is_ON = FLAGS.MIS_search_or_many_body
@@ -88,8 +83,7 @@ def main(argv):
 
 
     datetimestr = gettimestamp()
-    if VERBOSE_SETUP:
-        print(datetimestr)
+    print(datetimestr)
 
 
 
@@ -164,9 +158,8 @@ def main(argv):
 
     dataset_id = FLAGS.dataset_prefix_identifier
     X_arr_trnval,___,I_ks,cum_I_ks,D,TRNVAL_N,classes_to_predict = load_dataset(dataset_id)
-    if VERBOSE_SETUP:
-        print('X_arr_trnval',X_arr_trnval.shape)
-        print("N,D\t",TRNVAL_N,D)
+    print('X_arr_trnval',X_arr_trnval.shape)
+    print("N,D\t",TRNVAL_N,D)
 
     ENTROPY_CALC_MODE = "X_default"
     # ENTROPY_CALC_MODE = "P_full_tensor"
@@ -204,18 +197,15 @@ def main(argv):
         frontiers = complete_MIS_search(X_arr_trnval,D,I_ks,cum_I_ks,  T=T,
                                         PARAM_RENORM=PARAM_RENORMALIZATION,INT_BS=INT_BS,HEREDITY_STRENGTH=HEREDITY_STR)
 
-        if VERBOSE_SETUP:
-            print("FINAL COUNT OF SELECTED")
+
+        print("FINAL COUNT OF SELECTED")
         my_inters = frontiers[-1][0]
-        if VERBOSE_SETUP:
-            print(len(my_inters))
+        print(len(my_inters))
 
         frontiers=frontiers[:302]
-        if VERBOSE_SETUP:
-            print("FINAL COUNT OF SELECTED")
+        print("FINAL COUNT OF SELECTED")
         my_inters = frontiers[-1][0]
-        if VERBOSE_SETUP:
-            print(len(my_inters))
+        print(len(my_inters))
 
 
     
@@ -224,22 +214,19 @@ def main(argv):
         # ### [1,2,3]-body instead of MIS
 
         the_singles = [(i,) for i in range(D)]
-        if VERBOSE_SETUP:
-            print(the_singles)
+        print(the_singles)
         the_doubles = []
         for i in range(D):
             for j in range(i+1,D):
                 the_doubles.append( (i,j) )
-        if VERBOSE_SETUP:
-            print(the_doubles)
+        print(the_doubles)
         the_triples = []
         for i in range(D):
             for j in range(i+1,D):
                 for k in range(j+1,D):
                     the_triples.append( (i,j,k) )
-        if VERBOSE_SETUP:
-            print(the_triples)
-            print()
+        print(the_triples)
+        print()
 
         the_doubles = sorted(the_doubles,key=lambda x: sum(list(x)))
         the_triples = sorted(the_triples,key=lambda x: sum(list(x)))
@@ -259,18 +246,15 @@ def main(argv):
         if MANY_BODY_INDEX==3:
             frontiers.append( (my_inters,None) )
 
-        if VERBOSE_SETUP:
-            print("FINAL COUNT OF SELECTED")
+        print("FINAL COUNT OF SELECTED")
         my_inters = frontiers[-1][0]
-        if VERBOSE_SETUP:
-            print(len(my_inters))
+        print(len(my_inters))
 
 
     trnval_split = (0.70,0.30)
     TRN_N = int(TRNVAL_N*trnval_split[0])
     VAL_N = TRNVAL_N - TRN_N
-    if VERBOSE_SETUP:
-        print('TRN_N',TRN_N,'VAL_N',VAL_N)
+    print('TRN_N',TRN_N,'VAL_N',VAL_N)
 
     np.random.seed(1)
     np.random.seed(FLAGS.trnval_shuffle_seed)
@@ -285,14 +269,12 @@ def main(argv):
     BS = X_arr_trn.shape[0]
 
     if ENTROPY_CALC_MODE=="X_default":
-        if VERBOSE_SETUP:
-            print('X_arr_trn',X_arr_trn.shape)
+        print('X_arr_trn',X_arr_trn.shape)
         X_trn_torch = torch.from_numpy(X_arr_trn).float().to(the_device)
         trn_loader = DataLoader(dataset=X_trn_torch, batch_size=BS,shuffle=True)
         num_batches = len(trn_loader)
-        if VERBOSE_SETUP:
-            print("BS",BS)
-            print('batches',num_batches)
+        print("BS",BS)
+        print('batches',num_batches)
     else:
         raise Exception("not reimplemented yet")
 
