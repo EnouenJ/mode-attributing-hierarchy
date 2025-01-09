@@ -1,4 +1,4 @@
-!/bin/sh
+#!/bin/env sh
 
 wget https://archive.ics.uci.edu/static/public/73/mushroom.zip -P "datasets/"
 mkdir "datasets/mushroom/"

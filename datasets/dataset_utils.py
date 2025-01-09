@@ -1,6 +1,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import csv
+import json
 
 
 
@@ -23,16 +25,16 @@ def get_cumulative_index_sizes(I_ks):
 
 
 
-def read_categorical_only_from_CSV(CSV_FILENAME,I_ks,N,event_dictionary):
-    pass
 
+
+def read_categorical_only_from_CSV(CSV_FILENAME,I_ks,N,event_dictionary,verbose=False):
     D=len(I_ks)
     ONEHOT_D = sum(list(I_ks))
-    print(I_ks)
-    print(ONEHOT_D)
+    if verbose:
+        print(I_ks)
+        print(ONEHOT_D)
     X_arr = np.zeros( (N,ONEHOT_D), dtype=int )
     
-    import csv
     with open(CSV_FILENAME, newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',')
         n=0
@@ -41,16 +43,16 @@ def read_categorical_only_from_CSV(CSV_FILENAME,I_ks,N,event_dictionary):
             for d in range(D):
                 value = row[d]
                 if value not in event_dictionary[d]:
-                    print('\t',d)
+                    if verbose:
+                        print('\t',d)
                 v_id = event_dictionary[d].index(value)
         
                 X_arr[n,cum_n+v_id] = 1
                 cum_n += I_ks[d]
-            # print(', '.join(row))
             n+=1
-    print(n)
+    if verbose:
+        print(n)
     return X_arr
-
 
 
 def create_relevant_plot_categorical(X_arr,event_dictionary,I_ks,cum_I_ks):
@@ -72,7 +74,6 @@ def create_relevant_plot_categorical(X_arr,event_dictionary,I_ks,cum_I_ks):
     return plot_categorical
 
 
-import json
 def save_onehotified_dataset_to_numpy(save_path,onehotified_array,N,D,I_ks,cum_I_ks,readable_labels,event_dictionary,trntst_split=(0.70,0.30)):
     metadata_dictionary = {}
     metadata_dictionary["N"] = N
@@ -115,8 +116,7 @@ def load_triple_from_path(dataset_id_path):
     return X_trn,X_tst,metadata_dict
 
 def load_dataset(dataset_id,dataset_path="datasets/preprocessed_data/"):
-    
-    
+
     if dataset_id=="mushroom10D_":
         X_trn,X_tst,metadata_dict = load_triple_from_path(dataset_path+"mushroom_")
     else:
