@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/env sh
 
 python train_mahgenta_EBM_script.py --dataset_prefix_identifier="breastcancer_" --masking_loss_variant="unmasked" --MIS_search_or_many_body=True    --AIS_type_of_on="end_of_epochs" --heredity_strength="weak30" --MIS_renorm_ON_or_OFF=True    --num_of_MIS_steps=50 --interaction_batch_size=1   --epochs="10"    --num_of_gibbs_steps=3      
 python train_mahgenta_EBM_script.py --dataset_prefix_identifier="breastcancer_" --masking_loss_variant="unmasked" --MIS_search_or_many_body=False   --AIS_type_of_on="every_step"    --many_body_index=2                                                                                            --epochs="100"   --num_of_gibbs_steps=3      
